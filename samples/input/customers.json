@@ -1,0 +1,12 @@
+[
+  {
+    "customer_id": "C001",
+    "name": "Alice Chen",
+    "region": "North"
+  },
+  {
+    "customer_id": "C002",
+    "name": "Ben Lin",
+    "region": "South"
+  }
+]

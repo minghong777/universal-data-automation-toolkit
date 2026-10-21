@@ -1,0 +1,11 @@
+FICTIONAL INVOICE - DEMO ONLY
+
+Invoice INV-001 | Sample Studio | 2026-01-15
+
+
+
+  Service                                Qty             Amount
+
+  Data cleanup                         1                 125.50
+
+  Report export                         1                 80.00

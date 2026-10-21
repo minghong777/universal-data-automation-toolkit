@@ -1,0 +1,5 @@
+﻿order_id,customer_name,region,amount
+001,Alice Chen,North,125.50
+002,Ben Lin,South,80
+003,Cara Wu,North,210
+004,Dana Lee,,95

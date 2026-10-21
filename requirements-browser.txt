@@ -1,0 +1,2 @@
+# Optional: browser validation and screenshot generation only.
+playwright>=1.49,<2

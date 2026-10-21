@@ -1,0 +1,8 @@
+# Preserve binary document/image fixtures without text conversion or text diffs.
+* text=auto
+*.pdf binary
+*.xlsx binary
+*.zip binary
+*.png binary
+# Intentional dirty header whitespace demonstrates the cleaner.
+samples/input/sales_january.csv whitespace=-blank-at-eol
