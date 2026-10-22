@@ -29,4 +29,4 @@ The application is independent of other workspace projects.
 
 ## Public two-mode update
 
-Completed implementation: explicit sample/upload selection, downloadable sample inputs, original/result previews, per-session PDF state and reset, inline session-delivered outputs, Excel temporary-resource cleanup, isolation/browser regression tests and privacy/deployment documentation. Cloud acceptance remains pending approval, push and live verification; do not mark it complete based on local tests.
+Completed implementation: explicit sample/upload selection, downloadable sample inputs, original/result previews, per-session PDF state and reset, inline session-delivered outputs, Excel temporary-resource cleanup, isolation/browser regression tests and privacy/deployment documentation. After the approved push and a full app reboot, live sample/upload and two-session checks passed on 2026-10-22. Future releases must repeat cloud checks; local tests alone do not establish hosted behavior.

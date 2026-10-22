@@ -1,6 +1,6 @@
 # Review before publishing the two-mode update
 
-Reviewed on 2026-10-22. Existing public repository: `minghong777/universal-data-automation-toolkit`. This update must be committed locally, then explicitly approved by the owner before pushing. No force push, remote replacement or cloud deployment is part of preparation.
+Reviewed on 2026-10-22. Existing public repository: `minghong777/universal-data-automation-toolkit`. The owner approved the update and it was pushed normally, without force or remote-history replacement. GitHub Actions and subsequent hosted checks passed. Future uploads still require the owner’s authorization.
 
 ## Changes under review
 
@@ -31,4 +31,4 @@ Read [PRIVACY.md](PRIVACY.md) before approving this update:
 - Clear/reset removes app references and resets widgets, not browser downloads or a guaranteed immediate wipe of all framework buffers, swap or temporary resources after a crash.
 - PDF extraction remains best-effort, without OCR. AGPL/PyMuPDF licensing obligations remain relevant to derivatives.
 
-The owner-provided Community Cloud URL timed out during baseline inspection. The updated revision is not on the server until an approved push and deployment; live tests must still be run afterward. This limitation is explicitly recorded rather than reported as success.
+Initial hosted loading failed while importing the new PDF preview helper; a full owner-triggered app reboot resolved it. Sample mode, fictional-file uploads/downloads and two independent sessions then passed against the live URL. See VALIDATION.md for scope and PRIVACY.md for remaining limitations.

@@ -29,7 +29,7 @@ git clone https://github.com/minghong777/universal-data-automation-toolkit.git
 cd universal-data-automation-toolkit
 ```
 
-The public repository contains the previously published version. This two-mode update requires owner approval before its new commit is pushed.
+The public repository includes the two-mode application. The hosted revision has been verified using fictional samples and uploads.
 
 Use **Python 3.12** to match the verified environment. The source targets Python 3.11+, but other versions have not been validated with this release's full dependency snapshot.
 
@@ -143,7 +143,7 @@ File limits are not a malware sandbox or a hard per-user resource quota. Complex
 - [Publish a separate GitHub repository](docs/PUBLISHING.md) — exact commands, staging review, private-first upload and optional public visibility.
 - [Deploy to Streamlit Community Cloud](docs/DEPLOYMENT.md) — Python version, dependencies, two-mode configuration, permissions and hosting/privacy limitations.
 
-Owner-provided deployment: https://minghong-data-toolkit.streamlit.app. This update has not been pushed or verified there yet; a baseline connection attempt timed out. After approval and deployment, run the live checklist in DEPLOYMENT.md before claiming cloud acceptance.
+Live portfolio demo: **https://minghong-data-toolkit.streamlit.app**. Verified on 2026-10-22 with fictional samples/uploads and two independent browser sessions. See [VALIDATION.md](VALIDATION.md) for the tested scope; public testing remains restricted to non-sensitive data.
 
 ## License
 

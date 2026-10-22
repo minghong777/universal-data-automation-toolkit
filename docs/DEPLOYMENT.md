@@ -2,7 +2,7 @@
 
 Owner-provided app URL: **https://minghong-data-toolkit.streamlit.app**.
 
-This update is prepared locally. No push or hosted application change is authorized until the owner explicitly confirms the new commit. A GitHub commit alone does not prove the cloud is running that revision.
+The owner approved and pushed the two-mode update. After a full Community Cloud reboot, hosted sample/upload and session tests passed on 2026-10-22. A GitHub commit alone is not proof of a healthy deployment; repeat the live checklist for future releases.
 
 ## Before approving publication
 
@@ -45,7 +45,7 @@ With optional Playwright dependencies installed:
 .venv/bin/python scripts/browser_sessions.py --url https://minghong-data-toolkit.streamlit.app
 ```
 
-Run these **after the new commit is approved, pushed and deployed**. The scripts are not evidence of cloud success merely because they pass locally. They save reports/downloads to ignored `artifacts/` and can overwrite curated screenshots with the tested fictional view.
+Run these **after each approved update is pushed and deployed**. The scripts handle both the local app page and Community Cloud’s iframe wrapper. The scripts are not evidence of cloud success merely because they pass locally. They save reports/downloads to ignored `artifacts/` and can overwrite curated screenshots with the tested fictional view.
 
 ## If creating another deployment
 
@@ -55,4 +55,4 @@ Cloud resources are finite, and local disk is not durable application storage. D
 
 ## Current verification status
 
-The owner supplied the URL above. An unauthenticated browser baseline attempt from the development environment timed out before the app heading appeared. The updated code has not been pushed or deployed in this preparation step, so cloud acceptance remains pending. Local test results and exact limitations are recorded in `VALIDATION.md`.
+The app above passed the sample and real-upload smoke checks plus two-context session tests on 2026-10-22. Initial loading failed at the new PDF-preview import until the owner performed a full **Reboot app**; an ordinary page rerun did not fix it. If a future update imports new helpers and fails during hot reload, inspect logs and perform a full reboot before making further code changes. Verify the app again afterward.

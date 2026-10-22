@@ -1,6 +1,6 @@
 # Validation record — public two-mode update
 
-Verified locally on Ubuntu with Python 3.12.15 on 2026-10-22. The updated revision is committed locally only until the owner approves a push.
+Verified locally on Ubuntu with Python 3.12.15 on 2026-10-22. The owner-approved two-mode revision `fd81e81` was pushed to GitHub; GitHub Actions passed and the hosted app was verified after a full reboot.
 
 ## Automated checks
 
@@ -51,7 +51,15 @@ Ignored local reports live in `artifacts/browser-validation.json`, `artifacts/br
 
 Owner-provided URL: https://minghong-data-toolkit.streamlit.app.
 
-A baseline attempt from this development environment timed out before the application heading appeared. The two-mode update has not been pushed or deployed as part of preparation. Therefore **cloud acceptance of the updated revision remains pending**, not passed. After approval/push, use the live checklist in `docs/DEPLOYMENT.md` and repeat browser scripts against the deployed URL.
+**Hosted checks passed on 2026-10-22**, after the owner rebooted the app:
+
+- All four workflows in sample mode and real fictional-file upload mode.
+- CSV/TXT/XLSX controls and actual CSV/ZIP downloads; scanned-PDF warning.
+- Two independent browser sessions with the same filename but different contents and distinct outputs.
+- Clear one session without affecting the other; reject malformed replacement uploads without leaving old outputs.
+- Preserve original ZIP member bytes, reset rename confirmation, and remove stale PDF results when its file is removed.
+
+The initial hot update produced an ImportError while importing the new PDF preview function. A full Community Cloud reboot resolved it. The browser scripts now handle Community Cloud's iframe wrapper and wait for the clear-session rerender before selecting a new input mode. These tests use non-sensitive fictional data and do not establish confidential-data security or unlimited hosting capacity. New releases should repeat the live checklist.
 
 ## Demonstration expectations
 

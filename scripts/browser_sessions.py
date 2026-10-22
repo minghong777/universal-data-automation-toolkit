@@ -1,3 +1,4 @@
+from browser_support import BrowserApp
 """Two independent browser contexts: uploads, errors, clearing and inline downloads.
 
 Run against a local server or an explicitly approved hosted version using
@@ -10,7 +11,7 @@ import base64
 import json
 import shutil
 import zipfile
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, expect
 
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
@@ -32,7 +33,7 @@ def decoded_csv(page):
 
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=shutil.which('google-chrome') or shutil.which('chromium'),headless=True,chromium_sandbox=True,args=['--disable-dev-shm-usage'])
-    a=browser.new_context();b=browser.new_context();pa=a.new_page();pb=b.new_page()
+    a=browser.new_context();b=browser.new_context();pa=BrowserApp(a.new_page());pb=BrowserApp(b.new_page())
     for page in [pa,pb]:
         page.goto(args.url,wait_until='networkidle')
         page.get_by_role('heading',name='Universal Data Automation Toolkit',exact=True).wait_for()
@@ -47,6 +48,7 @@ with sync_playwright() as p:
         with page.expect_download() as event:page.get_by_role('button',name='Download CSV',exact=True).click()
         assert Path(event.value.path()).read_bytes()==expected
     pa.get_by_role('button',name='Clear my session',exact=True).click()
+    expect(pa.get_by_role('radio',name='Try with sample data',exact=True)).to_be_checked(timeout=30000)
     pa.get_by_text('Upload your own files',exact=True).click()
     pa.get_by_text('Select a supported file above, or choose the sample-data mode.').wait_for()
     assert not pa.get_by_role('button',name='Download CSV',exact=True).count()
