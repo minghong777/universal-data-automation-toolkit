@@ -1,50 +1,58 @@
-# Deploy to Streamlit Community Cloud
+# Update and verify the Streamlit Community Cloud app
 
-This is a deployment guide, not evidence of a live deployment. Publishing code, changing visibility and creating an app require the owner's explicit approval. No API key is needed for this project.
+Owner-provided app URL: **https://minghong-data-toolkit.streamlit.app**.
 
-## 1. Prepare the repository
+This update is prepared locally. No push or hosted application change is authorized until the owner explicitly confirms the new commit. A GitHub commit alone does not prove the cloud is running that revision.
 
-Complete [PUBLISHING.md](PUBLISHING.md), test the code locally and review the exact files being uploaded. `app.py`, `requirements.txt`, `toolkit/`, `samples/` and `.streamlit/config.toml` must be present. Do not commit `.venv/`, `.env`, `.streamlit/secrets.toml`, private inputs or local notification/test artifacts.
+## Before approving publication
 
-The repository's `requirements.txt` pins direct dependencies. `requirements-lock.txt` is the complete locally verified snapshot; Community Cloud reads the standard `requirements.txt` automatically. Do not add conflicting environment files. The `pyproject.toml` holds project/test metadata, not a separate dependency environment. Select Python **3.12** to match validation. See [Streamlit dependency guidance](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies).
+Read [PRIVACY.md](PRIVACY.md): public uploads reach the server, sessions are logically separated rather than process-isolated, dependencies may create cleaned temporary resources, and no confidential-data service or immediate secure erasure is promised. Use non-sensitive test files only.
 
-## 2. Create the app after approval
+The update offers both **Try with sample data** and **Upload your own files** in all four workflows. Uploads default to enabled. No secrets, API keys or new package dependencies are needed. `TOOLKIT_ALLOW_UPLOADS=false` is an optional server-environment kill switch, not a required setting or a Streamlit secrets key.
 
-1. Sign in at [Streamlit Community Cloud](https://share.streamlit.io/) and connect the intended GitHub account. Review the permissions requested.
-2. Choose **Create app** and the option to deploy an existing app.
-3. Select the repository, branch **main**, and entrypoint **app.py**.
-4. Choose an available app URL/subdomain if desired.
-5. In **Advanced settings**, select Python **3.12**. No secrets are required. Do not enable `TOOLKIT_ALLOW_UPLOADS` on the public demo.
-6. Review the settings and deploy. Inspect the build logs for missing dependencies or incompatible versions.
-7. Open the resulting `*.streamlit.app` URL and verify all four sample workflows, downloads and warnings. Only then add the real URL to the README and Upwork entry.
+## How the update reaches Community Cloud
 
-The official [deployment guide](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy) describes repository, branch, entrypoint and Python selection. Private repositories may require additional GitHub permissions; repo privacy and app visibility are separate settings. Review both rather than assuming a private repo makes the app private. [Permissions and platform limitations](https://docs.streamlit.io/deploy/streamlit-community-cloud/status).
+1. Review the local tests, screenshots, privacy risks and commit summary.
+2. Explicitly approve pushing the reviewed commit to `minghong777/universal-data-automation-toolkit`, branch `main`.
+3. Push normally, without force. GitHub Actions should pass tests and the release-file check.
+4. In Community Cloud, verify the existing app is configured for that repository, branch `main`, and entrypoint `app.py`. Keep Python **3.12** to match validation; dependencies are supplied by root `requirements.txt`.
+5. Community Cloud normally updates when code is pushed to its configured branch. Check build/app logs and the visible UI; if the old version persists, use the app's **Manage app → Reboot app** control.
+6. Verify the live URL with the checklist below before calling the update deployed. GitHub CI success is not cloud runtime verification.
 
-## 3. Keep the portfolio demo sample-only
+Official guidance: [updating a Community Cloud app](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app), [deployment and Python settings](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy), and [rebooting](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/reboot-your-app).
 
-The code defaults to `TOOLKIT_ALLOW_UPLOADS=false`. Without explicitly setting the environment variable to `true`, the UI exposes only fictional fixtures and no upload controls. The app does not read this setting from Streamlit secrets. Leave it unset on Community Cloud.
+## Live verification checklist
 
-This avoids inviting public visitors to upload confidential files and reduces exposure to untrusted parser inputs. It does not make the application a hardened multi-tenant service. Demonstrate personal/client uploads only in a separate, access-controlled deployment after a specific security review.
+Use only the committed fictional files, never private client files:
 
-The committed config does not force a loopback server address; let Community Cloud manage server binding. For local work, explicitly use `--server.address 127.0.0.1`.
+- Open each workflow and confirm both source-mode options are visible.
+- Clean & merge: upload January CSV + February XLSX; preview originals; obtain four cleaned rows; download CSV and Excel.
+- Convert files: upload customers JSON and an XLSX; check original/export previews and downloads. Reject nested JSON and malformed CSV clearly.
+- Extract PDF: preview the original invoice's first page, inspect text/table, download TXT/CSV/Excel/table ZIP. Select or upload the scanned PDF and confirm the OCR warning.
+- Organize files: preview originals and rename rules, confirm the new destinations, download ZIP and verify its contents.
+- Open two independent browser profiles/contexts; upload same-named files with distinct fictional markers. Each output should contain only its own marker. Clear one session and confirm the other remains unchanged.
+- Remove an uploaded PDF and confirm previous results disappear. Change a ZIP naming rule and confirm download approval resets.
+- Confirm downloads work in the deployed browser/CSP. Inline data URIs avoid shared server media URLs, but provider/browser behavior must be tested in the actual environment.
+- Review logs for errors without publishing cookies, credentials or uploaded contents.
 
-## 4. Privacy and operational limitations
+## Repeatable browser checks
 
-- On a hosted application, uploaded data would be transferred to the cloud server. In-memory processing is not browser-only processing.
-- No authentication, client accounts, audit trail, malware isolation or durable storage is implemented. Public sample-only use is the intended portfolio configuration.
-- Community Cloud is a demonstration hosting environment with finite resources. Do not promise 24/7 uptime, fixed capacity or persistent local disk contents. Confirm current limits with the service before making client commitments.
-- Multiple sessions can increase memory use even with per-file limits. Large PDFs and concurrent exports can still be expensive. Keep the demo on fictional samples.
-- Never copy real credentials into code or commits. Future integrations should use Streamlit's [secrets management](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/secrets-management), not a committed `secrets.toml`.
-- Do not display stack traces, uploaded content or credentials in public logs. Check any new diagnostic code before deployment.
-- No OCR is installed. Scanned PDFs need a separately scoped OCR workflow. Do not add Tesseract unless implementing and testing that feature.
-- Review AGPL and PyMuPDF licensing before hosting a proprietary derivative. Preserve source availability and applicable notices for this open-source project.
+With optional Playwright dependencies installed:
 
-## Troubleshooting and updates
+```bash
+.venv/bin/python scripts/browser_smoke.py --url https://minghong-data-toolkit.streamlit.app
+.venv/bin/python scripts/browser_smoke.py --uploads --url https://minghong-data-toolkit.streamlit.app
+.venv/bin/python scripts/browser_sessions.py --url https://minghong-data-toolkit.streamlit.app
+```
 
-- **Import error:** confirm Python 3.12 and root `requirements.txt`; inspect build logs. Do not add browser-test dependencies to the production environment.
-- **Sample missing:** confirm `samples/input/` was committed. The hosted app does not need to regenerate samples at startup.
-- **Upload controls absent:** expected in the public demo. Test uploads locally with the explicit opt-in command in the README.
-- **PDF has no table:** inspect the original; table detection is best-effort. Never substitute invented rows.
-- **Deployment fails:** retain logs privately, fix/test locally, then review and approve the next push. Do not repeatedly change dependency versions without recording what passed.
+Run these **after the new commit is approved, pushed and deployed**. The scripts are not evidence of cloud success merely because they pass locally. They save reports/downloads to ignored `artifacts/` and can overwrite curated screenshots with the tested fictional view.
 
-Deployment and final app visibility must still be verified in your own account. This preparation did not create an app, upload code or change remote settings.
+## If creating another deployment
+
+Sign in at https://share.streamlit.io/, select the intended GitHub repository, branch `main`, entrypoint `app.py`, and Python 3.12. No credentials are required by this application. Review app visibility independently of repository visibility. Do not create a competing app when simply updating the owner's existing deployment.
+
+Cloud resources are finite, and local disk is not durable application storage. Do not promise continuous uptime or production capacity. The committed configuration does not force a loopback address; local commands explicitly bind `127.0.0.1`. The optional browser tooling is not a production dependency. No OCR engine is installed.
+
+## Current verification status
+
+The owner supplied the URL above. An unauthenticated browser baseline attempt from the development environment timed out before the app heading appeared. The updated code has not been pushed or deployed in this preparation step, so cloud acceptance remains pending. Local test results and exact limitations are recorded in `VALIDATION.md`.

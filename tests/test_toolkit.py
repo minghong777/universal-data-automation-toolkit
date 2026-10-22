@@ -13,8 +13,12 @@ from generate_samples import generate
 
 ROOT=Path(__file__).resolve().parents[1]
 
-@pytest.fixture(scope='session',autouse=True)
-def samples():generate()
+def test_sample_generator_uses_requested_directory(tmp_path):
+    destination=tmp_path/'samples'
+    generate(destination)
+    frame=read_table('cleaned.csv',(destination/'output/cleaned_sales.csv').read_bytes())
+    assert len(frame)==4
+    assert (destination/'input/scanned_invoice.pdf').is_file()
 
 @pytest.mark.parametrize('name',['../x','/tmp/x','a\\b','a/b','..','bad\x00name','CON.txt','x.','x:evil',''])
 def test_unsafe_names(name):
@@ -163,3 +167,28 @@ def test_excel_xml_entity_is_rejected():
         for member in original.infolist():
             target.writestr(member.filename,xml if member.filename=='xl/worksheets/sheet1.xml' else original.read(member))
     with pytest.raises(ValidationError):read_table('entity.xlsx',buf.getvalue())
+
+def test_excel_export_cleans_temp_resources_after_failure(monkeypatch):
+    from openpyxl.worksheet._writer import ALL_TEMP_FILES
+    from openpyxl import Workbook
+    before=set(ALL_TEMP_FILES)
+    def fail(*args,**kwargs):raise OSError('simulated save failure')
+    monkeypatch.setattr(Workbook,'save',fail)
+    with pytest.raises(ValidationError,match='Excel export failed'):
+        export_excel(pd.DataFrame({'name':['FICTIONAL_PRIVATE_DATA']}))
+    assert set(ALL_TEMP_FILES)==before
+
+
+def test_excel_export_cleans_temp_resources_after_success():
+    from openpyxl.worksheet._writer import ALL_TEMP_FILES
+    before=set(ALL_TEMP_FILES)
+    assert export_excel(pd.DataFrame({'name':['FICTIONAL_PRIVATE_DATA']})).startswith(b'PK')
+    assert set(ALL_TEMP_FILES)==before
+
+
+def test_excel_control_characters_rejected_before_spooling():
+    from openpyxl.worksheet._writer import ALL_TEMP_FILES
+    before=set(ALL_TEMP_FILES)
+    with pytest.raises(ValidationError,match='control characters'):
+        export_excel(pd.DataFrame({'name':['invalid\x00text']}))
+    assert set(ALL_TEMP_FILES)==before

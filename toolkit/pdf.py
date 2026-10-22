@@ -41,3 +41,18 @@ def extract_pdf(name, data):
             return PDFResult(pd.DataFrame(pages),tables,warnings)
     except ValidationError:raise
     except Exception as e:raise ValidationError('Could not parse this PDF. It may be damaged or unsupported.') from e
+
+def preview_pdf(name, data):
+    """Bounded first-page visual preview, returned as bytes to the same session."""
+    validate_upload(name, data, {'.pdf'})
+    try:
+        with pymupdf.open(stream=data, filetype='pdf') as doc:
+            if doc.needs_pass or not len(doc):
+                raise ValidationError('Cannot preview an empty or password-protected PDF.')
+            page = doc[0]
+            scale = min(1.0, 1200 / max(page.rect.width, page.rect.height, 1))
+            return page.get_pixmap(matrix=pymupdf.Matrix(scale, scale), alpha=False).tobytes('png')
+    except ValidationError:
+        raise
+    except Exception as error:
+        raise ValidationError('Cannot create a visual preview of this PDF.') from error

@@ -8,6 +8,8 @@ import pandas as pd
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Font, PatternFill
 from openpyxl.cell import WriteOnlyCell
+from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
+from pathlib import Path
 from openpyxl.utils import get_column_letter
 from .safety import ValidationError, validate_upload, check_workbook
 
@@ -166,24 +168,46 @@ def export_csv(df):
     return out.to_csv(index=False,lineterminator='\n').encode('utf-8-sig')
 
 def export_excel(df):
-    if len(df)>MAX_ROWS or len(df.columns)>MAX_COLUMNS:raise ValidationError('Export exceeds dataset limit.')
-    wb=Workbook(write_only=True);ws=wb.create_sheet('Results')
+    if len(df)>MAX_ROWS or len(df.columns)>MAX_COLUMNS:
+        raise ValidationError('Export exceeds dataset limit.')
+    # Validate before OpenPyXL starts its temporary worksheet stream.
+    for row in chain([list(df.columns)],df.itertuples(index=False,name=None)):
+        for value in row:
+            if isinstance(value,str):
+                if len(value)>32767:
+                    raise ValidationError('Excel cells cannot exceed 32,767 characters; export CSV instead.')
+                if ILLEGAL_CHARACTERS_RE.search(value):
+                    raise ValidationError('Excel cannot store these control characters; export CSV instead.')
+    wb=Workbook(write_only=True)
+    ws=wb.create_sheet('Results')
     ws.freeze_panes='A2'
     ws.auto_filter.ref=f'A1:{get_column_letter(max(1,len(df.columns)))}{len(df)+1}'
-    # Validate before streaming, so failures do not leave an unfinished workbook.
-    for row in chain([list(df.columns)],df.itertuples(index=False,name=None)):
-        for v in row:
-            if isinstance(v,str) and len(v)>32767:
-                raise ValidationError('Excel cells cannot exceed 32,767 characters; export CSV instead.')
-    for index,row in enumerate(chain([list(df.columns)],df.itertuples(index=False,name=None))):
-        cooked=[]
-        for v in row:
-            if pd.isna(v):v=None
-            cell=WriteOnlyCell(ws,value=v)
-            if isinstance(v,str):cell.data_type='s'
-            if index==0:
-                cell.font=Font(bold=True,color='FFFFFF')
-                cell.fill=PatternFill('solid',fgColor='167D8D')
-            cooked.append(cell)
-        ws.append(cooked)
-    buf=BytesIO();wb.save(buf);wb.close();return buf.getvalue()
+    try:
+        for index,row in enumerate(chain([list(df.columns)],df.itertuples(index=False,name=None))):
+            cooked=[]
+            for value in row:
+                if pd.isna(value):value=None
+                cell=WriteOnlyCell(ws,value=value)
+                if isinstance(value,str):cell.data_type='s'
+                if index==0:
+                    cell.font=Font(bold=True,color='FFFFFF')
+                    cell.fill=PatternFill('solid',fgColor='167D8D')
+                cooked.append(cell)
+            ws.append(cooked)
+        buf=BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+    except Exception as error:
+        raise ValidationError('Excel export failed. Try CSV or a smaller dataset.') from error
+    finally:
+        # OpenPyXL uses a secure temporary worksheet file internally. Its normal
+        # save path deletes it, but failed saves need explicit cleanup as well.
+        # _writer is pinned-version integration, covered by cleanup regression tests.
+        try:
+            if not ws.closed:
+                ws.close()
+        finally:
+            writer=getattr(ws,'_writer',None)
+            if writer is not None and Path(writer.out).exists():
+                writer.cleanup()
+            wb.close()

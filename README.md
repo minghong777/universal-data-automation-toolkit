@@ -4,7 +4,7 @@
 
 A functional portfolio application that demonstrates how common manual data tasks can become repeatable workflows. Built with Streamlit and UI-independent Python modules, with realistic fictional inputs, downloadable outputs, and automated tests.
 
-> The default public demo uses fictional samples only. Enable uploads explicitly for trusted local use. This is an independent portfolio project, not a claim of paid client work or guaranteed business savings.
+> Every workflow offers **Try with sample data** and **Upload your own files**. Public uploads are intended for non-sensitive test files only. This is an independent portfolio project, not a confidential-data service or a claim of paid client work. Read the [data-handling limitations](docs/PRIVACY.md) before using your own files.
 
 ![Spreadsheet cleaning preview](docs/screenshots/02-clean-merge.png)
 
@@ -29,7 +29,7 @@ git clone https://github.com/minghong777/universal-data-automation-toolkit.git
 cd universal-data-automation-toolkit
 ```
 
-These clone instructions apply after the owner approves and completes the initial push.
+The public repository contains the previously published version. This two-mode update requires owner approval before its new commit is pushed.
 
 Use **Python 3.12** to match the verified environment. The source targets Python 3.11+, but other versions have not been validated with this release's full dependency snapshot.
 
@@ -58,15 +58,17 @@ python3 -m pip install --user uv
 
 For externally managed system Python installations that reject `pip --user`, install uv using its [official installation instructions](https://docs.astral.sh/uv/getting-started/installation/); do not bypass your OS package protections.
 
-### Process your own trusted local files
+### Use sample files or upload your own
 
-Uploads are deliberately disabled by default. To enable them **only on a trusted local server**, stop the previous process and run:
+1. Select a workflow in the sidebar.
+2. Choose **Try with sample data** for ready-to-use fictional examples, or **Upload your own files** to select files from your computer.
+3. In sample mode, optionally download the original sample files to try the upload flow. Review original data or the first-page PDF preview and choose processing options.
+4. Review the results and download CSV, Excel, TXT or ZIP as applicable.
+5. Click **Clear my session** when finished. Switching workflows also resets current uploads/results.
 
-```bash
-TOOLKIT_ALLOW_UPLOADS=true .venv/bin/python -m streamlit run app.py --server.address 127.0.0.1
-```
+Both modes are enabled by default locally and on Community Cloud. No terminal flag is needed. An owner can explicitly set `TOOLKIT_ALLOW_UPLOADS=false` to temporarily disable uploads.
 
-Uncheck **Use fictional sample data** in the chosen workspace and upload your files. Keep private inputs outside the repository, such as in an ignored `private_data/` folder. On a hosted app, uploads would travel to the remote server; “in memory” does not mean “stays on your computer.”
+Files are uploaded to the hosting server, not processed solely inside your browser. Do not upload credentials, account keys, confidential client documents or sensitive personal/financial records to this public demo. Originals are not modified. Session cleanup removes application references and resets controls; it does not erase downloaded files or guarantee immediate secure erasure of framework buffers.
 
 ## Usage and demonstration
 
@@ -85,9 +87,9 @@ The portfolio includes a [60-second walkthrough](PORTFOLIO.md) and [client use-c
 .venv/bin/python scripts/release_check.py
 ```
 
-The sample generator intentionally regenerates only predefined fictional fixtures under `samples/`; do not store client documents there. The release check reviews Git candidate files and nested sample archives, not ignored local files. See [validation evidence](VALIDATION.md) and [release review](docs/RELEASE_REVIEW.md) for results and scope.
+The sample generator intentionally regenerates only predefined fictional fixtures under `samples/`; do not store client documents there. The release check reviews Git candidate files and nested sample archives, not ignored local files. Tests rebuild generated fixtures in a temporary directory rather than overwriting committed samples. See [validation evidence](VALIDATION.md) and [release review](docs/RELEASE_REVIEW.md) for results and scope.
 
-Optional real-browser testing uses the default sample-only local server and Playwright:
+Optional real-browser testing uses the normal two-mode local server and Playwright:
 
 ```bash
 .venv/bin/python -m pip install -r requirements-browser.txt
@@ -95,15 +97,15 @@ Optional real-browser testing uses the default sample-only local server and Play
 .venv/bin/python scripts/browser_smoke.py
 ```
 
-For an additional real-upload check, start the local server with `TOOLKIT_ALLOW_UPLOADS=true` and run the browser script with `--uploads`.
+Run the browser script with `--uploads` to exercise real fictional-file uploads, and run `scripts/browser_sessions.py` to check two independent sessions, clearing, malformed uploads and unchanged ZIP content. Both source modes are available in the normal server.
 
 This captures images in `docs/screenshots/` and local test outputs in ignored `artifacts/`. Google Chrome or Chromium is used if installed; otherwise the script uses Playwright's Chromium.
 
 ## Project structure
 
 ```text
-app.py                    Streamlit UI and explicit public-demo mode
-toolkit/                  Reusable validation and processing services
+app.py                    Streamlit UI with samples and uploads
+toolkit/                  Processing, session state and inline download services
 tests/                    Service, safety and Streamlit AppTest checks
 samples/input/            Fictional CSV, XLSX, JSON and PDFs
 samples/output/           Outputs generated by the actual services
@@ -130,16 +132,18 @@ The processing modules are independent of Streamlit and can be adapted to client
 
 Limits: **10 MiB/file, 30 MiB/batch, 30 files, 100,000 data rows, 200 columns, 100 PDF pages, and 2 million extracted text characters**. Workbook archives also have entry-count, expanded-size and compression-ratio checks. DefusedXML hardens Excel XML parsing.
 
-Application code processes uploads in server memory and does not intentionally save or send them to third-party services. Dependencies may use managed temporary resources. Uploaded bytes are not logged by this application; browser downloads remain wherever you save them. Streamlit usage telemetry is disabled.
+Application code does not intentionally persist uploads or put outputs in shared folders. PDF results are retained only in the current session; other tabular/file processing results are local to the current rerun. No user-data cache is shared across sessions. Downloads and PDF images are delivered inline to that browser session rather than registered at shared media URLs.
 
-The default sample-only demo is suitable for showing functionality, not for collecting confidential client data. Upload-enabled hosting needs authentication, access control, resource isolation, retention policies and a deployment-specific review. File limits are not antivirus scanning or a malware sandbox. No independent penetration test or compliance certification is claimed.
+OpenPyXL uses temporary worksheet files internally during Excel exports. Explicit cleanup runs after success and failure; crash-proof secure erasure is not guaranteed. **Clear my session** removes the app's references and rotates upload controls; framework-owned buffers, garbage collection, browser copies, swap and provider behavior have separate lifecycles. Public visitors share a server process, not isolated containers.
+
+File limits are not a malware sandbox or a hard per-user resource quota. Complex documents or concurrent visitors can exhaust shared resources. Inline downloads add base64 memory overhead and are capped at 30 MiB per output. This public demo has no client authentication, durable storage, compliance certification or independent penetration test. See [PRIVACY.md](docs/PRIVACY.md) for the complete pre-publication risk statement and intended non-sensitive use.
 
 ## Publish and deploy
 
 - [Publish a separate GitHub repository](docs/PUBLISHING.md) — exact commands, staging review, private-first upload and optional public visibility.
-- [Deploy to Streamlit Community Cloud](docs/DEPLOYMENT.md) — Python version, dependencies, safe sample-only defaults, permissions and hosting limitations.
+- [Deploy to Streamlit Community Cloud](docs/DEPLOYMENT.md) — Python version, dependencies, two-mode configuration, permissions and hosting/privacy limitations.
 
-There is no live deployment URL until you approve and complete publication. Do not add fake “live demo” links or claim a cloud deployment has been tested.
+Owner-provided deployment: https://minghong-data-toolkit.streamlit.app. This update has not been pushed or verified there yet; a baseline connection attempt timed out. After approval and deployment, run the live checklist in DEPLOYMENT.md before claiming cloud acceptance.
 
 ## License
 

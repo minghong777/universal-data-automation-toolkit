@@ -26,3 +26,7 @@ CLIENT_USE_CASES.md      # Chinese explanations and scoped extensions
 ```
 
 The application is independent of other workspace projects.
+
+## Public two-mode update
+
+Completed implementation: explicit sample/upload selection, downloadable sample inputs, original/result previews, per-session PDF state and reset, inline session-delivered outputs, Excel temporary-resource cleanup, isolation/browser regression tests and privacy/deployment documentation. Cloud acceptance remains pending approval, push and live verification; do not mark it complete based on local tests.

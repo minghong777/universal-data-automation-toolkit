@@ -4,11 +4,11 @@
 
 **Suggested Upwork entry:**
 
-I built a Python data automation toolkit for cleaning and merging spreadsheets, converting CSV/Excel/JSON, extracting text-based PDF content, and organizing files with preview-first ZIP exports. The Streamlit interface includes fictional demos, before-and-after previews, validation messages and reusable processing modules. Automated tests cover core workflows and safety checks. This is an independent portfolio project using synthetic data.
+I built a Python data automation toolkit for cleaning and merging spreadsheets, converting CSV/Excel/JSON, extracting text-based PDF content, and organizing files with preview-first ZIP exports. The Streamlit interface includes fictional demos, before-and-after previews, validation messages and reusable processing modules. Automated tests cover core workflows and safety checks. Visitors can use fictional samples or upload non-sensitive files in each workflow. This is an independent portfolio project using synthetic data.
 
 **Expanded project description:**
 
-I built a reusable Python application that turns repetitive file-processing tasks into clear, repeatable workflows. It combines spreadsheet cleaning and merging, validated format conversion, text-based PDF extraction, and preview-based batch file organization in a Streamlit interface. Users can inspect results before downloading outputs, while original uploads remain unchanged. The public portfolio mode uses fictional samples only; trusted local uploads require an explicit opt-in. This independent portfolio demonstration uses fictional datasets and includes automated tests, setup instructions, and documented limitations.
+I built a reusable Python application that turns repetitive file-processing tasks into clear, repeatable workflows. It combines spreadsheet cleaning and merging, validated format conversion, text-based PDF extraction, and preview-based batch file organization in a Streamlit interface. Users can inspect results before downloading outputs, while original uploads remain unchanged. Each workflow offers fictional samples or user uploads, original/result previews, session-owned processing, inline downloads and a clear-session control. Public uploads are for non-sensitive testing only. This independent portfolio demonstration uses fictional datasets and includes automated tests, setup instructions, and documented limitations.
 
 ## Key features
 
@@ -20,6 +20,9 @@ I built a reusable Python application that turns repetitive file-processing task
 - Validate malformed inputs, limit resource use and reject unsafe paths and naming collisions.
 - Protect exported spreadsheets from formula-like uploaded text.
 - Reuse UI-independent service modules for future client workflows.
+- Let visitors choose samples or their own files without terminal commands.
+- Keep PDF state per session and deliver outputs inline without shared server download URLs.
+- Clear current upload/result references and reset file controls with a dedicated button.
 
 ## Technologies
 
@@ -63,3 +66,7 @@ The browser validation produces actual screenshots, not visual mockups:
 - `docs/screenshots/04-pdf.png`
 - `docs/screenshots/05-organizer.png`
 - `docs/screenshots/06-ocr-warning.png`
+
+## Public upload and deployment scope
+
+Files travel to the hosting server. This is a demonstration with application-level session separation, not authenticated tenant isolation or secure document hosting. Internal Excel temporary resources are cleaned after normal success/failure, but instant secure erasure is not promised. No OCR or universal PDF accuracy is claimed. Local browser and automated tests are reported in VALIDATION.md; acceptance of the updated Community Cloud revision remains pending owner-approved push and live testing.

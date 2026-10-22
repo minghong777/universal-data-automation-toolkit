@@ -10,8 +10,9 @@ from toolkit.files import plan_files, build_zip, zip_outputs
 
 ROOT=Path(__file__).parent/'samples'
 
-def generate():
-    inputs=ROOT/'input';outputs=ROOT/'output'
+def generate(destination=None):
+    base=Path(destination) if destination is not None else ROOT
+    inputs=base/'input';outputs=base/'output'
     inputs.mkdir(parents=True,exist_ok=True);outputs.mkdir(parents=True,exist_ok=True)
     header=[' Order ID ',' Customer Name ',' Region ',' Amount ']
     jan=pd.DataFrame([['001',' Alice Chen ',' North ','125.50'],['002','Ben Lin','South','80'],['002','Ben Lin','South','80'],[None,None,None,None]],columns=header)
@@ -50,6 +51,6 @@ def generate():
     plan=plan_files(files,prefix='client_',numbered=True,organize='extension')
     (outputs/'organized_files.zip').write_bytes(build_zip(files,plan))
     (outputs/'pdf_extraction_summary.json').write_text(json.dumps({'pages':len(pdf.pages),'tables':len(pdf.tables),'warnings':pdf.warnings},indent=2))
-    print(f'Generated fictional inputs and verified-path outputs in {ROOT}')
+    print(f'Generated fictional inputs and verified-path outputs in {base}')
 
 if __name__=='__main__':generate()

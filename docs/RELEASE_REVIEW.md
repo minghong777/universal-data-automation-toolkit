@@ -1,44 +1,34 @@
-# Public release preparation review
+# Review before publishing the two-mode update
 
-Reviewed on 2026-10-21. This is a scoped source/release review, not an independent security audit, penetration test or guarantee that every possible secret or vulnerability has been found.
+Reviewed on 2026-10-22. Existing public repository: `minghong777/universal-data-automation-toolkit`. This update must be committed locally, then explicitly approved by the owner before pushing. No force push, remote replacement or cloud deployment is part of preparation.
 
-## Repository boundary and publication state
+## Changes under review
 
-A standalone local Git repository separates this project from the parent workspace. The owner subsequently created the public repository `minghong777/universal-data-automation-toolkit`. Local publishing preparation includes configuring that repository as `origin`, staging the reviewed project files and creating an initial commit. No push or Streamlit deployment is part of that preparation; uploading code remains subject to a separate explicit confirmation.
+- Both sample and upload modes are available by default in each workflow, with plain-language format/size guidance, original previews, processing controls and result downloads.
+- Fictional inputs can be downloaded directly to try the real upload flow.
+- PDF state is owned by each Streamlit session and discarded on source/file/workflow changes or clear/reset. File controls use a random session namespace.
+- User outputs and PDF preview images use inline data URIs rather than shared server media-file URLs. No shared user-data cache, database, static output directory or global result registry is used.
+- Original bytes are not altered; organizer output is a new ZIP with a preview-first confirmation tied to current names and content.
+- Securely created OpenPyXL worksheet temporary files are cleaned on normal success and failed save. Tests no longer overwrite the repository's generated sample fixtures.
+- README, Upwork copy, screenshots, privacy explanation and deployment instructions describe actual behavior and do not claim updated cloud acceptance prematurely.
 
-## Credential and personal-information review
+## Verification
 
-- Checked Git candidate source, configuration, documentation and fixtures with the release helper; nested sample ZIP/XLSX bytes were also scanned.
-- No suspected credentials, private keys, recognized token formats or personal home-directory paths were found in that scope.
-- The local completion-notification receipt and browser artifacts are excluded via `artifacts/`; they have not been copied into public documentation.
-- Removed workstation-specific absolute paths from the public documentation. Samples use synthetic names and business data. Screenshot captures contain app content rather than browser account menus or desktop notifications.
-- `.gitignore` covers environment files, key/certificate formats, known credential files, virtual environments, caches, temporary files, local runtime outputs and conventional private/client-data directories.
-- Git ignore checks confirmed representative `.env`, secrets, credential, private-data and notification paths are excluded. Fictional samples and curated screenshots remain included intentionally.
+The automated suite passes **63 tests**. Local browser checks cover samples, uploads, invalid inputs, real downloads, two independent sessions, clearing, removal and rename-confirmation reset. See `VALIDATION.md`.
 
-The helper does not inspect image pixels, arbitrary encoded secrets, ignored files or historical commits. The initial project history contains only the reviewed release snapshot; it does not include parent-workspace history. Future commits, new assets and external integrations require another review. A filename outside a private-data directory can still contain personal information; `.gitignore` is not content-based access control.
+The release helper checks current Git candidate bytes and bounded nested sample archives for suspected credentials and personal home paths. `.gitignore` excludes environment secrets, key formats, local credentials, virtual environments, private-data folders and runtime artifacts. Committed samples are fictional. The initial Git history contains only the previously reviewed public project; parent-workspace research/history is not part of it.
 
-## File operations and hardening
+This is a scoped source review, not a comprehensive secret/vulnerability audit. Image pixels, arbitrary encoded secrets, ignored files and hosting-provider internals are not covered by the heuristic scanner. No separate dependency vulnerability-database audit is claimed.
 
-- Normal processing uses in-memory data; application code does not write uploaded content to arbitrary local paths or overwrite originals.
-- Organizer outputs are virtual rename plans followed by new ZIP bytes. Paths are validated, traversal is rejected, and case-insensitive destination collisions are blocked. Uploaded ZIPs are not extracted.
-- The sample generator overwrites predefined fictional fixtures only. Tests intentionally regenerate these; real client data does not belong in `samples/`.
-- Workbook archives have bounded size/entry/ratio checks. Duplicate archive members are now rejected. DefusedXML was added for XML entity defenses, and external workbook links are not retained.
-- CSV exports neutralize formula-like values/headers; Excel writes strings literally. Filters do not evaluate user code or regex.
-- Public mode now defaults to fictional samples only; local uploads require `TOOLKIT_ALLOW_UPLOADS=true`. The scanned-PDF warning is demonstrable from a built-in sample dropdown.
-- The browser validation script uses Chromium's sandbox rather than passing `--no-sandbox`.
-- No upload routes, secrets, API integrations or network requests were added by the release preparation. Streamlit itself serves its UI and downloads.
+## Remaining security/privacy risks to acknowledge
 
-Parser checks do not provide process isolation, antivirus protection or hard CPU/memory guarantees. Dependencies can create managed temporary resources. Uploaded data would reside on the server in upload-enabled hosting; memory-only processing is not a promise of browser-only privacy.
+Read [PRIVACY.md](PRIVACY.md) before approving this update:
 
-## Tests and reproducibility
+- Uploads are sent to the server; public testing must use non-sensitive files.
+- Independent session state and inline downloads do not provide separate processes or protect against server compromise/parser exploits/session theft.
+- No client authentication, malware sandbox, hard per-visitor resource quotas or confidential-data compliance controls are implemented.
+- Inline data copies add memory overhead and can be shared by their recipient. Concurrent processing can exhaust Community Cloud resources.
+- Clear/reset removes app references and resets widgets, not browser downloads or a guaranteed immediate wipe of all framework buffers, swap or temporary resources after a crash.
+- PDF extraction remains best-effort, without OCR. AGPL/PyMuPDF licensing obligations remain relevant to derivatives.
 
-The current automated suite passes **48 tests with zero failures** in Python 3.12.15. It covers service workflows, malformed files, path/ZIP checks, XML entity rejection, duplicate workbook members, default sample-only mode, explicit local upload opt-in, and the public scanned-PDF demonstration. See `VALIDATION.md` for details and local browser evidence.
-
-Direct dependencies are pinned in `requirements.txt`; `requirements-lock.txt` captures the verified local environment. A GitHub Actions workflow is prepared for Python 3.12 with read-only repository permissions. It has not run on GitHub because no push has occurred. Dependencies were not subjected to a separate vulnerability-database audit in this review.
-
-## Remaining owner decisions
-
-- Confirm the intended public destination before pushing; the selected identity uses the GitHub account name and noreply address.
-- Review the AGPL license and PyMuPDF licensing model before public release or client reuse.
-- Review screenshots and English portfolio copy; make no claims of real client work or guaranteed savings.
-- Approve any push, repository visibility change or cloud deployment explicitly. Verify the hosted app in the owner's account before adding a live demo URL.
+The owner-provided Community Cloud URL timed out during baseline inspection. The updated revision is not on the server until an approved push and deployment; live tests must still be run afterward. This limitation is explicitly recorded rather than reported as success.

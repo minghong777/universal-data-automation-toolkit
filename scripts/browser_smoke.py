@@ -16,8 +16,6 @@ with sync_playwright() as p:
     page=browser.new_page(viewport={'width':1440,'height':1500},device_scale_factor=1)
     page.goto(args.url,wait_until='networkidle')
     page.get_by_role('heading',name='Universal Data Automation Toolkit',exact=True).wait_for()
-    if args.uploads:
-        assert not page.get_by_text('Portfolio demo: fictional sample data only.').count(), 'Start the local test server with TOOLKIT_ALLOW_UPLOADS=true.'
     page.screenshot(path=str(root/'docs/screenshots/01-overview.png'),full_page=True)
     workflows=[('Clean & merge',['sales_january.csv','sales_february.xlsx'],'02-clean-merge.png'),('Convert files',['customers.json'],'03-convert.png'),('Extract PDF',['fictional_invoice.pdf'],'04-pdf.png'),('Organize files',['sales_january.csv','customers.json'],'05-organizer.png')]
     for name,files,screenshot in workflows:
@@ -25,11 +23,10 @@ with sync_playwright() as p:
         page.get_by_role('heading',name=name,exact=True).wait_for()
         if args.uploads:
             print('Uploading',name,flush=True)
+            page.get_by_text('Upload your own files',exact=True).click()
             page.locator('input[type=file]').set_input_files([str(root/'samples/input'/f) for f in files])
         else:
             print('Checking fictional samples:',name,flush=True)
-            if page.get_by_role('checkbox',name='Use fictional sample data').is_enabled():
-                page.get_by_text('Use fictional sample data',exact=True).click()
             assert not page.locator('input[type=file]').count()
         page.wait_for_timeout(1200)
         page.locator('[data-testid="stDataFrame"]').last.wait_for()
@@ -52,6 +49,7 @@ with sync_playwright() as p:
     page.get_by_text('Extract PDF',exact=True).first.click()
     page.get_by_role('heading',name='Extract PDF',exact=True).wait_for()
     if args.uploads:
+        page.get_by_text('Upload your own files',exact=True).click()
         page.locator('input[type=file]').set_input_files(str(root/'samples/input/scanned_invoice.pdf'))
     else:
         page.get_by_role('combobox').click()

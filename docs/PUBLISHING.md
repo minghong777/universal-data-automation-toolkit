@@ -99,7 +99,7 @@ git remote -v
 git ls-remote --symref origin
 ```
 
-The preparation check found no remote branches or tags. Recheck after approval because the remote can change. If remote content appears, fetch and inspect it before proceeding; do not overwrite it or use force push.
+The initial release is already present on remote `main`. Inspect the latest remote commit before pushing an update; fetch and preserve existing history. Recheck after approval because the remote can change. If remote content appears, fetch and inspect it before proceeding; do not overwrite it or use force push.
 
 After the owner explicitly approves pushing to this **public** destination, authenticate and run:
 
@@ -123,7 +123,7 @@ git ls-remote origin refs/heads/main
 git ls-tree --name-only HEAD
 ```
 
-Required contents: README, `app.py`, `toolkit/`, `samples/`, `tests/`, `PORTFOLIO.md`, `docs/` and dependency files. Check the Actions test result as well. This verification must follow an actual successful push; it has not been claimed in advance.
+Required contents: README, `app.py`, `toolkit/`, `samples/`, `tests/`, `PORTFOLIO.md`, `docs/` (including privacy/deployment instructions) and dependency files. Check the Actions test result as well. This verification must follow an actual successful push; it has not been claimed in advance.
 
 The remaining sections describe a private-first alternative for a **different, new repository**. Skip them for the owner's already-created public repository unless the owner chooses that alternative.
 
@@ -186,7 +186,7 @@ Public visibility makes repository content and commit history available to other
 
 - Add repository description and relevant topics: `python`, `streamlit`, `data-cleaning`, `excel`, `csv`, `pdf`, `automation`.
 - Confirm screenshot links render in the README and use the short description in `PORTFOLIO.md` for Upwork.
-- Deploy the sample-only app only when ready; follow [DEPLOYMENT.md](DEPLOYMENT.md).
+- Deploy the reviewed two-mode app only when ready; follow [DEPLOYMENT.md](DEPLOYMENT.md).
 - Add an actual live demo URL only after opening and testing it. Never publish a placeholder as if it were working.
 - For later updates, inspect `git diff`, run checks, commit, and only then perform an approved `git push`. Avoid `git add .` outside the project directory.
 
