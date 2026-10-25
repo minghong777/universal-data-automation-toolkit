@@ -1,5 +1,9 @@
 # Universal Data Automation Toolkit
 
+> **🚀 [Open the Live Streamlit Demo](https://minghong-data-toolkit.streamlit.app/)**
+>
+> Try spreadsheet cleaning, file conversion, PDF extraction, and file organization directly in your browser.
+
 **Reusable Python workflows for spreadsheet cleaning, file conversion, PDF extraction, and file organization.**
 
 A functional portfolio application that demonstrates how common manual data tasks can become repeatable workflows. Built with Streamlit and UI-independent Python modules, with realistic fictional inputs, downloadable outputs, and automated tests.
