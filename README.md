@@ -1,8 +1,19 @@
 # Universal Data Automation Toolkit
 
-> **🚀 [Open the Live Streamlit Demo](https://minghong-data-toolkit.streamlit.app/)**
->
-> Try spreadsheet cleaning, file conversion, PDF extraction, and file organization directly in your browser.
+## Live Demo
+
+**[Open the Live Streamlit Demo →](https://minghong-data-toolkit.streamlit.app/)**
+
+Note: This demo is hosted on Streamlit Community Cloud and may take a moment to wake up after a period of inactivity.
+
+1. Select **Clean & merge** in the sidebar (expand the sidebar on mobile).
+2. Keep **Try with sample data** selected and review the original sales files.
+3. Compare the before/after tables and modification summary, then download CSV or Excel.
+4. Explore the other workspaces, or choose **Upload your own files** with non-sensitive test files.
+
+No account or API key is required. PDF extraction uses existing text layers; OCR is not included.
+
+## Project Overview
 
 **Reusable Python workflows for spreadsheet cleaning, file conversion, PDF extraction, and file organization.**
 
@@ -10,21 +21,54 @@ A functional portfolio application that demonstrates how common manual data task
 
 > Every workflow offers **Try with sample data** and **Upload your own files**. Public uploads are intended for non-sensitive test files only. This is an independent portfolio project, not a confidential-data service or a claim of paid client work. Read the [data-handling limitations](docs/PRIVACY.md) before using your own files.
 
-![Spreadsheet cleaning preview](docs/screenshots/02-clean-merge.png)
+## Key Features
 
-## Features
-
-| Workflow | Capabilities | Example client problem |
-|---|---|---|
-| Clean & merge | Merge compatible CSV/XLSX files; standardize headers; trim text; remove empty/duplicate rows; filter and sort; preview changes | Consolidate monthly sales exports without repetitive copying |
-| Data quality | Identify duplicate rows; report missing cells; show before/after tables and modification counts | Find incomplete records before importing them into another system |
-| Convert files | CSV ↔ selected Excel worksheet; compatible flat JSON → CSV/XLSX | Convert one system's export into a usable spreadsheet |
-| Extract PDF | Extract existing text and detected tables; flag pages with no text layer | Reduce manual transcription from consistent text-based reports |
-| Organize files | Preview prefixes, find/replace, numbering, extension or prefix-rule folders; download a ZIP | Prepare consistently named project attachments |
+- **Clean & merge:** merge compatible CSV/XLSX files, standardize headers, trim text, remove empty/duplicate rows, filter, sort, and preview changes.
+- **Data quality:** identify duplicates, report missing cells, and compare before/after tables and modification counts.
+- **Convert files:** convert CSV or a selected Excel worksheet to CSV/XLSX, or export compatible flat JSON records to a spreadsheet.
+- **Extract PDF:** extract existing text and detected tables; flag pages without a text layer. OCR is not included.
+- **Organize files:** preview prefixes, find/replace, numbering, and extension or prefix-rule folders, then download a ZIP.
 
 Original uploads are never renamed or overwritten. Missing values are reported rather than fabricated. See [sample files](samples/README.md), [screenshots](docs/screenshots/README.md), and the [portfolio entry](PORTFOLIO.md).
 
-## Quick start
+## Example Use Cases
+
+1. **Consolidate monthly sales exports:** use the supplied sales samples. Six input rows become four after one blank and one duplicate row are removed. ID `001` remains intact, and one missing region remains visible. Inspect before/after results, optionally filter or sort, and download CSV/XLSX.
+2. **Prepare data for spreadsheet review:** use the customers JSON sample or a selected XLSX worksheet. Nested JSON and malformed files produce validation errors.
+3. **Reduce copying from text-based invoices:** the fictional invoice contains one detectable table and text. Text/page exports and table ZIP outputs are available. Select `scanned_invoice.pdf` in the sample dropdown to see the OCR warning without uploading a file.
+4. **Prepare consistently named attachments:** select naming and folder rules, inspect the destination preview, confirm it, and download a new ZIP. Changing the plan resets confirmation.
+
+The portfolio includes a [60-second walkthrough](PORTFOLIO.md) and [client use-case mapping](CLIENT_USE_CASES.md).
+
+## Screenshots
+
+**Spreadsheet cleaning — review inputs and results before downloading.**
+
+![Spreadsheet cleaning preview](docs/screenshots/02-clean-merge.png)
+
+<details>
+<summary>View format conversion and PDF extraction</summary>
+
+**Format conversion**
+
+![Flat JSON conversion with CSV and Excel exports](docs/screenshots/03-convert.png)
+
+**PDF extraction**
+
+![Text-based PDF extraction and detected tables](docs/screenshots/04-pdf.png)
+
+</details>
+
+## Technologies Used
+
+- **Python:** reusable processing modules independent of the interface.
+- **Streamlit:** browser interface, sample/upload modes, and session controls; hosted on Streamlit Community Cloud.
+- **pandas and openpyxl:** tabular cleaning, validation, and CSV/Excel exports.
+- **PyMuPDF:** PDF preview, text extraction, and table detection.
+- **defusedxml:** hardened XML parsing for Excel inputs.
+- **pytest:** automated processing and application checks.
+
+## How to Run Locally
 
 Repository: [minghong777/universal-data-automation-toolkit](https://github.com/minghong777/universal-data-automation-toolkit).
 
@@ -73,15 +117,6 @@ For externally managed system Python installations that reject `pip --user`, ins
 Both modes are enabled by default locally and on Community Cloud. No terminal flag is needed. An owner can explicitly set `TOOLKIT_ALLOW_UPLOADS=false` to temporarily disable uploads.
 
 Files are uploaded to the hosting server, not processed solely inside your browser. Do not upload credentials, account keys, confidential client documents or sensitive personal/financial records to this public demo. Originals are not modified. Session cleanup removes application references and resets controls; it does not erase downloaded files or guarantee immediate secure erasure of framework buffers.
-
-## Usage and demonstration
-
-1. **Clean & merge:** use the supplied sales samples. Six input rows become four after one blank and one duplicate row are removed. ID `001` remains intact, and one missing region remains visible. Inspect before/after results, optionally filter or sort, and download CSV/XLSX.
-2. **Convert files:** use the customers JSON sample or a selected XLSX worksheet. Nested JSON and malformed files produce validation errors.
-3. **Extract PDF:** the fictional invoice contains one detectable table and text. Text/page exports and table ZIP outputs are available. Select `scanned_invoice.pdf` in the sample dropdown to see the OCR warning without uploading a file.
-4. **Organize files:** select naming and folder rules, inspect the destination preview, confirm it, and download a new ZIP. Changing the plan resets confirmation.
-
-The portfolio includes a [60-second walkthrough](PORTFOLIO.md) and [client use-case mapping](CLIENT_USE_CASES.md).
 
 ## Tests and reproducible samples
 
